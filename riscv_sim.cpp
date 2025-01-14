@@ -102,15 +102,9 @@ public:
         t++;
         int indexSize = (int)log2(size / (block * assoc));
         int offset = (int)log2(block);
-        int tagsize = 20 - offset - indexSize;
-
-        string binAdr = (bitset<20>(addr)).to_string();
-        string tag = binAdr.substr(0, tagsize);
-        string index = binAdr.substr(tagsize, indexSize);
-        string offtag = binAdr.substr(indexSize + tagsize, offset);
-        int ind = stoi(index, 0, 2);
-        int intag = stoi(tag, nullptr, 2);
-        offset = stoi(offtag, nullptr, 2);
+        int ind = (addr >> (offset)) & ((1 << indexSize) - 1);
+        int intag = addr >> (offset + indexSize);
+        offset = (addr & ((1 << offset) - 1));
 
         for (int i = 0; i < assoc; i++)
         {
@@ -228,15 +222,9 @@ public:
         t++;
         int indexSize = (int)log2(size / (block * assoc));
         int offset = (int)log2(block);
-        int tagsize = 20 - offset - indexSize;
-
-        string binAdr = (bitset<20>(addr)).to_string();
-        string intag = binAdr.substr(0, tagsize);
-        string index = binAdr.substr(tagsize, indexSize);
-        string offtag = binAdr.substr(indexSize + tagsize, offset);
-        int line = stoi(index, 0, 2);
-        int tag = stoi(intag, nullptr, 2);
-        offset = stoi(offtag, nullptr, 2);
+        int line = (addr >> (offset)) & ((1 << indexSize) - 1);
+        int tag = addr >> (offset + indexSize);
+        offset = (addr & ((1 << offset) - 1) );
 
         for (int i = 0; i < assoc; i++)
         {
